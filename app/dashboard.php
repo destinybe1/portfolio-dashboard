@@ -1,8 +1,11 @@
 <?php
+
 declare(strict_types=1);
-
+require_once __DIR__ . '/auth.php';
+requireLogin();
 require_once __DIR__ . '/config.php';
-
+$user = currentUser();
+$isAdmin = ($user['role'] ?? '') === 'admin';
 $sql = "
     SELECT 
         p.snapshot_date,
@@ -51,6 +54,12 @@ $totalProfitPct = $totalCost > 0 ? ($totalProfit / $totalCost) * 100 : 0;
 </head>
 <body>
     <div class="container">
+<p class="subtitle">ยินดีต้อนรับ, <?= htmlspecialchars($user['full_name'] ?? '') ?><div class="topbar-actions" style="margin-bottom: 16px;">
+    <?php if ($isAdmin): ?>
+        <a class="btn btn-primary" href="admin/users.php">จัดการผู้ใช้</a>
+    <?php endif; ?>
+    <a class="btn btn-danger" href="logout.php">ออกจากระบบ</a>
+</div></p>
         <h1>Portfolio Dashboard</h1>
         <p class="subtitle">ภาพรวมพอร์ตจากข้อมูลล่าสุดของแต่ละแผน</p>
 
